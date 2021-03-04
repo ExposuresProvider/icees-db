@@ -1,0 +1,7 @@
+config/
+data/
+*.egg-info/
+.env
+__pycache__/
+venv/
+.vscode/
