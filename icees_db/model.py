@@ -1,7 +1,6 @@
 import enum
 import logging
 
-import numpy as np
 from sqlalchemy import (
     Table, Column, Float, Integer, String, MetaData, Sequence,
     Index, DateTime, Text, LargeBinary, Enum,
@@ -11,8 +10,6 @@ from .features import features
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-eps = np.finfo(float).eps
 
 metadata = MetaData()
 
