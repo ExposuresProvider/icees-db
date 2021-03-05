@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  icees_db_gen:
+    image: icees-db-gen
+    build:
+      context: .
+    env_file:
+      - .env
+    environment:
+      - DATA_PATH=./data
+    volumes:
+      - ./data:/data
