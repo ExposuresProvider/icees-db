@@ -71,17 +71,17 @@ type_dict = {
 
 db_ = os.environ["ICEES_DB"]
 host = os.environ["ICEES_HOST"]
-user = os.environ["ICEES_DBUSER"]
-password = os.environ["ICEES_DBPASS"]
-database = os.environ["ICEES_DATABASE"]
-DATAPATH = Path(os.environ["DATA_PATH"])
+user = "icees_dbuser"
+password = "icees_dbpass"
+database = "icees_database"
+DB_PATH = Path(os.environ["DB_PATH"])
 
 
 @contextmanager
 def db_connections():
     """Database connection context manager."""
     if db_ == "sqlite":
-        con = sqlite3.connect(DATAPATH / "example.db")
+        con = sqlite3.connect(DB_PATH / "example.db")
     elif db_ == "postgres":
         con = psycopg2.connect(
             host=host,
@@ -100,11 +100,11 @@ def db_connections():
 
 def insert(file_path, table_name):
     """Insert data from file into table."""
-    with open(file_path, "r") as f:
-        columns = [
-            (table_id(table_name) if x == "index" else x)
-            for x in next(f).strip().split(",")
-        ]
+    with open(file_path, "r") as stream:
+        reader = csv.DictReader(stream)
+        for row in reader:
+            columns = list(row.keys())
+            break
 
     with open(file_path, "r") as stream:
         reader = csv.DictReader(stream)

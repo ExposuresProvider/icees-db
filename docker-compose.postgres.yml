@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:12.4-alpine
+    container_name: ${ICEES_API_INSTANCE_NAME}-db
+    environment:
+      POSTGRES_USER: icees_dbuser
+      POSTGRES_PASSWORD: icees_dbpass
+      POSTGRES_DB: icees_database
+    ports:
+      - "5432:5432"
+    networks:
+      - icees
+  db_init:
+    image: icees-db-init
+    container_name: ${ICEES_API_INSTANCE_NAME}-db-init
+    build:
+      context: .
+    env_file:
+      - .env
+    environment:
+      - ICEES_HOST=db
+      - ICEES_DB=postgres
+      - DATA_PATH=./data
+    volumes:
+      - ./data:/data
+      - ./config:/config
+    networks:
+      - icees
+
+networks:
+  icees:
+    name: icees-postgres

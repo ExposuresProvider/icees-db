@@ -21,7 +21,7 @@ logger.info("waiting for database startup")
 
 def setup():
     """Set up database."""
-    if os.environ["ICEES_DB"] == "sqlite" and (Path(os.environ["DATA_PATH"]) / "example.db").exists():
+    if os.environ["ICEES_DB"] == "sqlite" and (Path(os.environ["DB_PATH"]) / "example.db").exists():
         return
 
     create()

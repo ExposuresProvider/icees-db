@@ -2,22 +2,19 @@
 from contextlib import contextmanager
 import os
 from pathlib import Path
+from time import sleep
 
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Connection
+from sqlalchemy.exc import OperationalError
 
 db = os.environ.get("ICEES_DB", "sqlite")
-serv_user = os.environ["ICEES_DBUSER"]
-serv_password = os.environ["ICEES_DBPASS"]
 serv_host = os.environ["ICEES_HOST"]
 serv_port = os.environ["ICEES_PORT"]
-serv_database = os.environ["ICEES_DATABASE"]
-serv_max_overflow = int(os.environ["ICEES_DB_MAX_OVERFLOW"])
-serv_pool_size = int(os.environ["ICEES_DB_POOL_SIZE"])
 
 engine = None
 
-DATAPATH = Path(os.environ["DATA_PATH"])
+DB_PATH = Path(os.environ["DB_PATH"])
 
 
 def get_db_connection():
@@ -26,13 +23,13 @@ def get_db_connection():
     if engine is None:
         if db == "sqlite":
             engine = create_engine(
-                f"sqlite:///{DATAPATH / 'example.db'}?check_same_thread=False",
+                f"sqlite:///{DB_PATH / 'example.db'}?check_same_thread=False",
             )
         elif db == "postgres":
             engine = create_engine(
-                f"postgresql+psycopg2://{serv_user}:{serv_password}@{serv_host}:{serv_port}/{serv_database}",
-                pool_size=serv_pool_size,
-                max_overflow=serv_max_overflow,
+                f"postgresql+psycopg2://icees_dbuser:icees_dbpass@{serv_host}:{serv_port}/icees_database",
+                pool_size=int(os.environ.get("POOL_SIZE", 10)),
+                max_overflow=int(os.environ.get("MAX_OVERFLOW", 0)),
             )
         else:
             raise ValueError(f"Unsupported database '{db}'")
@@ -44,7 +41,20 @@ def get_db_connection():
 def DBConnection() -> Connection:
     """Database connection."""
     engine = get_db_connection()
-    conn: Connection = engine.connect()
+    sleep_sec = 0.5
+    while True:
+        try:
+            conn: Connection = engine.connect()
+            break
+        except OperationalError as err:
+            sleep_sec *= 2
+            if sleep_sec > 16:
+                raise err
+            print(
+                "Failed to connect to PostgreSQL. "
+                f"Retrying in {sleep_sec} seconds..."
+            )
+            sleep(sleep_sec)
     try:
         yield conn
     finally:

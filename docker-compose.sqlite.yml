@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  db_init:
+    image: icees-db-init
+    container_name: ${ICEES_API_INSTANCE_NAME}-db-init
+    build:
+      context: .
+    env_file:
+      - .env
+    environment:
+      - ICEES_HOST=db
+      - ICEES_DB=sqlite
+      - DATA_PATH=/data
+    volumes:
+      - ./data:/data
+      - ./config:/config

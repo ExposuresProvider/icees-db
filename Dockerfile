@@ -5,10 +5,8 @@ ADD ./requirements.txt .
 RUN pip install -r ./requirements.txt
 
 # Copy in files
-ADD ./config ./config
 ADD ./icees_db ./icees_db
-ADD ./initdb.py ./initdb.py
-ADD ./initdb.sh ./initdb.sh
+ADD ./bin ./bin
 
 # set up base for command
-ENTRYPOINT ["./initdb.sh"]
+ENTRYPOINT ["./bin/initdb.sh"]
