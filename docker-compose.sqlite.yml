@@ -9,9 +9,10 @@ services:
     env_file:
       - .env
     environment:
-      - ICEES_HOST=db
       - ICEES_DB=sqlite
       - DATA_PATH=/data
+      - DB_PATH=/db
     volumes:
       - ./data:/data
+      - ./db:/db
       - ./config:/config
