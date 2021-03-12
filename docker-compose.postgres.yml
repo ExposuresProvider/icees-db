@@ -8,8 +8,6 @@ services:
       POSTGRES_USER: icees_dbuser
       POSTGRES_PASSWORD: icees_dbpass
       POSTGRES_DB: icees_database
-    ports:
-      - "5432:5432"
     networks:
       - icees
   db_init:
@@ -23,9 +21,10 @@ services:
       - ICEES_HOST=db
       - ICEES_DB=postgres
       - DATA_PATH=./data
+      - CONFIG_PATH=/config
     volumes:
-      - ./data:/data
-      - ./config:/config
+      - $DATA_PATH:/data
+      - $CONFIG_PATH:/config
     networks:
       - icees
 

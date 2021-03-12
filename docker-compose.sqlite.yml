@@ -13,6 +13,6 @@ services:
       - DATA_PATH=/data
       - DB_PATH=/db
     volumes:
-      - ./data:/data
-      - ./db:/db
-      - ./config:/config
+      - $DATA_PATH:/data
+      - $DB_PATH:/db
+      - $CONFIG_PATH:/config

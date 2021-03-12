@@ -9,12 +9,8 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.exc import OperationalError
 
 db = os.environ.get("ICEES_DB", "sqlite")
-serv_host = os.environ["ICEES_HOST"]
-serv_port = os.environ["ICEES_PORT"]
 
 engine = None
-
-DB_PATH = Path(os.environ["DB_PATH"])
 
 
 def get_db_connection():
@@ -22,10 +18,13 @@ def get_db_connection():
     global engine
     if engine is None:
         if db == "sqlite":
+            DB_PATH = Path(os.environ["DB_PATH"])
             engine = create_engine(
                 f"sqlite:///{DB_PATH / 'example.db'}?check_same_thread=False",
             )
         elif db == "postgres":
+            serv_host = os.environ["ICEES_HOST"]
+            serv_port = os.environ["ICEES_PORT"]
             engine = create_engine(
                 f"postgresql+psycopg2://icees_dbuser:icees_dbpass@{serv_host}:{serv_port}/icees_database",
                 pool_size=int(os.environ.get("POOL_SIZE", 10)),

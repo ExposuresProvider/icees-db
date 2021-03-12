@@ -70,24 +70,19 @@ type_dict = {
 }
 
 db_ = os.environ["ICEES_DB"]
-host = os.environ["ICEES_HOST"]
-user = "icees_dbuser"
-password = "icees_dbpass"
-database = "icees_database"
-DB_PATH = Path(os.environ["DB_PATH"])
 
 
 @contextmanager
 def db_connections():
     """Database connection context manager."""
     if db_ == "sqlite":
-        con = sqlite3.connect(DB_PATH / "example.db")
+        con = sqlite3.connect(Path(os.environ["DB_PATH"]) / "example.db")
     elif db_ == "postgres":
         con = psycopg2.connect(
-            host=host,
-            database=database,
-            user=user,
-            password=password,
+            host=os.environ["ICEES_HOST"],
+            database="icees_database",
+            user="icees_dbuser",
+            password="icees_dbpass",
         )
     else:
         raise ValueError(f"Unsupported database '{db_}'")
