@@ -69,7 +69,7 @@ type_dict = {
     "string": lambda s : s.astype(str, skipna=True)
 }
 
-db_ = os.environ["ICEES_DB"]
+db_ = os.environ.get("ICEES_DB", "sqlite")
 
 
 @contextmanager
