@@ -2,6 +2,7 @@
 import argparse
 import csv
 from contextlib import contextmanager
+import io
 import logging
 import os
 from pathlib import Path
@@ -95,32 +96,35 @@ def db_connections():
 
 def insert(file_path, table_name):
     """Insert data from file into table."""
-    with open(file_path, "r") as stream:
-        reader = csv.DictReader(stream)
-        for row in reader:
-            columns = list(row.keys())
-            break
-
-    with open(file_path, "r") as stream:
-        reader = csv.DictReader(stream)
-        to_db = [
-            tuple(row.get(col) for col in columns)
-            for row in reader
-        ]
-
     with db_connections() as con:
+        with open(file_path, "r") as stream:
+            _insert(table_name, con, stream)
 
-        cur = con.cursor()
-        if db_ == "sqlite":
-            placeholders = ", ".join("?" for _ in columns)
-        else:
-            placeholders = ", ".join("%s" for _ in columns)
-        query = "INSERT INTO {0} ({1}) VALUES ({2});".format(
-            table_name,
-            ", ".join(f"\"{col}\"" for col in columns),
-            placeholders,
-        )
-        cur.executemany(query, to_db)
+
+def _insert(table_name, con: sqlite3.Connection, stream: io.TextIOBase):
+    """Insert data from file into table."""
+    reader = csv.DictReader(stream)
+    to_db = []
+    columns = None
+    for row in reader:
+        if not columns:
+            columns = list(row.keys())
+        to_db.append(tuple(
+            row.get(col)
+            for col in columns
+        ))
+
+    cur = con.cursor()
+    if db_ == "sqlite":
+        placeholders = ", ".join("?" for _ in columns)
+    else:
+        placeholders = ", ".join("%s" for _ in columns)
+    query = "INSERT INTO {0} ({1}) VALUES ({2});".format(
+        table_name,
+        ", ".join(f"\"{col}\"" for col in columns),
+        placeholders,
+    )
+    cur.executemany(query, to_db)
 
 
 if __name__ == "__main__":
