@@ -10,8 +10,6 @@ def test_insert():
     con = sqlite3.connect(":memory:")
     query = "CREATE TABLE test (a int, b int, c int);"
     con.execute(query)
-    query = "INSERT INTO test (a, b, c) VALUES (3, 4, 5);"
-    con.execute(query)
     con.commit()
     data = """
         a,b,c
@@ -23,5 +21,7 @@ def test_insert():
         _insert("test", con, stream)
     
     result = con.execute("SELECT * from test")
-    assert list(result)
+    rows = list(result)
+    assert rows
+    assert rows[0][1] is None
     con.close()
