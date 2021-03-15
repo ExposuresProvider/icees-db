@@ -110,7 +110,7 @@ def _insert(table_name, con: sqlite3.Connection, stream: io.TextIOBase):
         if not columns:
             columns = list(row.keys())
         to_db.append(tuple(
-            row.get(col)
+            value if (value:=row.get(col)) != "" else None
             for col in columns
         ))
 
