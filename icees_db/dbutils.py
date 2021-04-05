@@ -106,11 +106,17 @@ def _insert(table_name, con: sqlite3.Connection, stream: io.TextIOBase):
     reader = csv.DictReader(stream)
     to_db = []
     columns = None
+    index = table_name[0].upper() + table_name[1:] + "Id"
     for row in reader:
         if not columns:
-            columns = list(row.keys())
+            columns = [
+                col if col != "index" else index
+                for col in row.keys()
+            ]
         to_db.append(tuple(
-            value if (value:=row.get(col)) != "" else None
+            value if (value:=(
+                row.get(col if col != index else "index")
+            )) != "" else None
             for col in columns
         ))
 
