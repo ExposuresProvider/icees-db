@@ -165,7 +165,7 @@ fn main() {
                 if !num_options[idx_col].is_none()
                     && num_vals > &mut num_options[idx_col].unwrap()
                 {
-                    panic!("There are more unique values for column {:?} than implied by its specification", column_names[idx_col])
+                    panic!("There are more unique values for column {:?} than implied by its specification", column_names[idx_col + 1])
                 }
             }
         }
