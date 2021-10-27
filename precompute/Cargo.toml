@@ -1,0 +1,10 @@
+[package]
+name = "compute_correlation"
+version = "0.1.0"  #:version
+edition = "2018"
+
+[dependencies]
+csv = "1.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_yaml = "0.8"
+statrs = "0.15.0"
