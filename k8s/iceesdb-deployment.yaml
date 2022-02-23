@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:      
+    io.kompose.service: iceesdb-service      
+  name: iceesdb-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: iceesdb-service
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        io.kompose.service: iceesdb-service
+    spec:
+      containers:
+        - image: renci/icees-db-init:1.0
+          name: icees-db-init
+          env:
+            - name: INPUT_MAPPING_FILE_WITH_PATH
+              value: "/iceesdata/covid/config/features.yml"
+            - name: INPUT_IDENTIFIERS_FILE_WITH_PATH
+              value: "/iceesdata/covid/config/identifiers.yml"
+            - name: OUTPUT_MAPPING_FILE_WITH_PATH
+              value: "/iceesdata/covid/config/mappings.yml"
+            - name: OUTPUT_VALUE_SETS_FILE_WITH_PATH
+              value: "/iceesdata/covid/config/value_sets.yml"
+            - name: ICEES_DB
+              value: "sqlite"
+            - name: DB_PATH
+              value: "/iceesdata/covid/sqlite"
+            - name: DATA_PATH
+              value: "/iceesdata/covid/test_data"
+            - name: CONFIG_PATH
+              value: "/iceesdata/covid/config"      
+          volumeMounts:
+            - name: iceesdata
+              mountPath: /iceesdata
+          resources:
+            requests:
+              cpu: "1"
+              memory: 8Gi
+            limits:
+              memory: "10Gi"
+              cpu: "2" 
+      restartPolicy: Always
+      volumes:
+        - name: iceesdata
+          persistentVolumeClaim:
+            claimName: iceesdata
+            
