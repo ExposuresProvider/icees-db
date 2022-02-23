@@ -9,8 +9,6 @@ spec:
   selector:
     matchLabels:
       io.kompose.service: iceesdb-service
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -46,7 +44,6 @@ spec:
             limits:
               memory: "10Gi"
               cpu: "2" 
-      restartPolicy: Always
       volumes:
         - name: iceesdata
           persistentVolumeClaim:
