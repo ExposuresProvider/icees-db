@@ -20,7 +20,7 @@ spec:
         - name: DB_PATH
           value: "/iceesdata/covid/sqlite"
         - name: DATA_PATH
-          value: "/iceesdata/covid/test_data"
+          value: "/iceesdata/covid/data"
         - name: CONFIG_PATH
           value: "/iceesdata/covid/config"      
       volumeMounts:

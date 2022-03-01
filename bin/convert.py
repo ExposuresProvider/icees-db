@@ -30,7 +30,9 @@ for table, table_mappings in old_mappings.items():
                 print("no biolinkType, default to NameThing")
                 categories = ["biolink:NamedThing"]
             ty = column_mapping["type"]
-            idt = old_identifiers[table].get(column, 'DUMMY:000000')
+            idt = old_identifiers[table].get(column)
+            if not idt:
+                idt = 'DUMMY:000000'
             mappings[column] = {
                 "categories": categories,
                 "identifiers": idt,
