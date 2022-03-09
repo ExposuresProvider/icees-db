@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# this script is a counterpart of initdb.sh while initdb.sh is a init script that is triggered when deploying to k8s,
+# and the initdb_local.sh can be run locally outside k8s
 set -e
 
 set -o allexport
