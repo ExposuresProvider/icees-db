@@ -7,12 +7,8 @@ spec:
     - image: renci/icees-db-init:1.0
       name: icees-db-init
       env:
-        - name: INPUT_MAPPING_FILE_WITH_PATH
+        - name: INPUT_FEATURE_FILE_WITH_PATH
           value: "/iceesdata/covid/config/features.yml"
-        - name: INPUT_IDENTIFIERS_FILE_WITH_PATH
-          value: "/iceesdata/covid/config/identifiers.yml"
-        - name: OUTPUT_MAPPING_FILE_WITH_PATH
-          value: "/iceesdata/covid/config/mappings.yml"
         - name: OUTPUT_VALUE_SETS_FILE_WITH_PATH
           value: "/iceesdata/covid/config/value_sets.yml"
         - name: ICEES_DB
